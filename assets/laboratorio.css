@@ -1,0 +1,168 @@
+
+    .stApp {
+        background: radial-gradient(ellipse at 88% 6%, #182350 0%, transparent 45%),
+            linear-gradient(150deg, #0c1836, #061024 70%);
+    }
+    [data-testid="stHeader"] { background: transparent; }
+    [data-testid="stMainBlockContainer"] { max-width: 1540px; padding-top: 3rem; }
+    .lab-hero {
+        display: flex; align-items: center; gap: 22px; min-height: 130px;
+        position: relative; isolation: isolate; overflow: hidden; padding: 12px 18px;
+        animation: lab-enter .55s ease-out both;
+    }
+    .lab-art {
+        position: absolute; z-index: -1; inset: 0 0 0 auto; width: 49%;
+        background-repeat: no-repeat; background-size: 1130px auto;
+        background-position: right top; border-radius: 14px;
+        mask-image: linear-gradient(90deg, transparent, black 38%);
+        opacity: .78; pointer-events: none;
+    }
+    .lab-logo {
+        display: grid; place-items: center; width: 92px; flex-shrink: 0;
+        height: 84px; padding-right: 15px; border-right: 2px solid #22e6e6;
+        color: #39f3ee;
+    }
+    .lab-logo svg { width: 68px; filter: drop-shadow(0 0 9px #22e6e680); animation: lab-glow 3s ease-in-out infinite alternate; }
+    .lab-heading h1 { color: #f6f8ff; font-size: clamp(1.9rem, 4vw, 3.6rem); padding: 0; margin: 0; line-height: 1.13; }
+    .lab-heading p { color: #b8d1ed; font-size: clamp(1rem, 2vw, 1.4rem); margin: .25rem 0 0; }
+    [data-baseweb="tab-list"] { gap: .55rem; }
+    [data-baseweb="tab-list"] button {
+        border: 1px solid #334876; border-radius: 12px 12px 0 0;
+        background: #111d3d; padding: .55rem 1rem; color: #e4f0ff;
+    }
+    [data-baseweb="tab-list"] button[aria-selected="true"] {
+        border-color: #29d7ee; background: linear-gradient(150deg, #153155, #0a4055);
+        box-shadow: inset 0 -3px #22e6e6, 0 0 12px #22e6e626;
+    }
+    [data-testid="stForm"] {
+        background: linear-gradient(145deg, #1a204b, #0b1835 72%);
+        border: 1px solid #9b5cff; border-radius: 17px; padding: clamp(14px, 2.5vw, 28px);
+        box-shadow: inset 0 1px 9px #9856ff36; animation: lab-enter .55s ease-out both;
+    }
+    .lab-form-title { display: flex; align-items: center; gap: 12px; padding: 0; margin: 0; }
+    .lab-form-title svg, .lab-field svg, .lab-chip svg { width: 25px; height: 25px; flex-shrink: 0; color: #37eee8; }
+    .lab-field { display: flex; align-items: center; gap: 8px; font-weight: 650; min-height: 28px; }
+    .lab-field svg { width: 21px; height: 21px; }
+    [data-testid="stNumberInput"] [data-baseweb="input"] {
+        background: #101c3a; border: 1px solid #657caf; border-radius: 10px;
+    }
+    [data-testid="stNumberInput"] [data-baseweb="input"]:focus-within { border-color: #37eee8; box-shadow: 0 0 0 2px #37eee833; }
+    [data-testid="stFormSubmitButton"] { text-align: center; }
+    [data-testid="stFormSubmitButton"] button {
+        position: relative; overflow: hidden; min-height: 52px;
+        width: min(100%, 700px); margin: 10px auto 0;
+        background: linear-gradient(100deg, #067988, #3156c5 43%, #8128d1 85%);
+        color: white; border: 1px solid #b985ff; border-radius: 13px;
+        box-shadow: 0 0 15px #7953f647; font-weight: 750; transition: box-shadow .2s, transform .2s;
+    }
+    [data-testid="stFormSubmitButton"] button:hover { box-shadow: 0 0 25px #38e9ff66; transform: translateY(-2px); color: white; }
+    [data-testid="stFormSubmitButton"] button::after {
+        content: ""; position: absolute; inset: 0; pointer-events: none;
+        background: linear-gradient(110deg, transparent 32%, #ffffff35 50%, transparent 68%);
+        animation: lab-sweep 5s ease-in-out infinite;
+    }
+    .lab-summary {
+        display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+        border: 1px solid #22dbe8; border-radius: 15px; padding: 14px 8px;
+        background: linear-gradient(110deg, #0b2a46, #101b3b);
+        margin-top: 8px; text-align: center;
+    }
+    .lab-summary > div { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0 8px; }
+    .lab-summary > div + div { border-left: 1px solid #557ba6; }
+    .lab-summary strong { color: #35fff0; font-size: clamp(1.25rem, 3vw, 2.3rem); line-height: 1.18; }
+    .lab-chip { display: inline-flex; align-items: center; gap: 8px; padding: 7px 13px; border: 1px solid #29eee5; border-radius: 12px; font-weight: 750; }
+    .lab-footer { text-align: center; color: #c5d3e9; font-style: italic; padding: 13px 0 0; }
+    [data-testid="stMetric"] { background: #111f3c; padding: 12px; border: 1px solid #354875; border-radius: 12px; }
+    [data-testid="stMetricValue"] { color: #42eee4; font-size: clamp(1.25rem, 2.4vw, 2rem); }
+    @keyframes lab-enter { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes lab-glow { to { filter: drop-shadow(0 0 15px #a66bfa); color: #b496ff; } }
+    @keyframes lab-sweep { 0%, 58% { transform: translateX(-105%); } 86%, 100% { transform: translateX(105%); } }
+    @media (max-width: 700px) {
+        .lab-art { width: 60%; opacity: .35; }
+        .lab-hero { gap: 10px; padding-left: 0; }
+        .lab-logo { width: 56px; height: 55px; padding-right: 8px; }
+        .lab-logo svg { width: 44px; }
+        .lab-summary { grid-template-columns: repeat(2, 1fr); row-gap: 12px; }
+        .lab-summary > div:nth-child(3) { border-left: 0; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .lab-hero, .lab-logo svg, [data-testid="stForm"], [data-testid="stFormSubmitButton"] button::after { animation: none; }
+        [data-testid="stFormSubmitButton"] button { transition: none; }
+    }
+    /* Matraz más grande junto al título */
+    .lab-logo {
+        width: 116px;
+        height: 104px;
+        padding-right: 16px;
+    }
+
+    .lab-logo svg {
+        width: 90px;
+        height: 90px;
+    }
+
+    /* Centrar el botón dentro del formulario */
+    [data-testid="stForm"] [data-testid="stFormSubmitButton"] {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+    }
+
+    [data-testid="stForm"] [data-testid="stFormSubmitButton"] button {
+        width: min(100%, 520px);
+        margin: 10px auto 0;
+    }
+
+    /* Dar espacio al título en pantallas pequeñas */
+    @media (max-width: 700px) {
+        .lab-logo {
+            width: 68px;
+            height: 64px;
+            padding-right: 8px;
+        }
+
+        .lab-logo svg {
+            width: 52px;
+            height: 52px;
+        }
+    }
+    /* Ventana flotante de resultados */
+    [data-testid="stDialog"] [role="dialog"] {
+        background: linear-gradient(145deg, #0d1933 0%, #171735 100%);
+        border: 1px solid #7052b6;
+        border-radius: 22px;
+        box-shadow: 0 18px 55px #020617cc, 0 0 24px #8b5cf62b;
+        animation: lab-enter 0.25s ease-out both;
+    }
+
+    /* Tarjeta con la clase predicha */
+    [data-testid="stDialog"] [data-testid="stMetric"] {
+        background: linear-gradient(110deg, #0c2b42, #162040);
+        border: 1px solid #236577;
+    }
+
+    [data-testid="stDialog"] [data-testid="stMetricValue"] {
+        color: #5eead4;
+        text-shadow: 0 0 12px #2dd4bf40;
+    }
+
+    /* Botón Volver al formulario */
+    [data-testid="stDialog"] [data-testid="stButton"] button {
+        background: linear-gradient(100deg, #087889, #4338b5, #7928b9);
+        color: #fff;
+        border: 1px solid #a78bfa;
+        border-radius: 12px;
+        font-weight: 700;
+    }
+
+    [data-testid="stDialog"] [data-testid="stButton"] button:hover {
+        border-color: #5eead4;
+        box-shadow: 0 0 16px #2dd4bf55;
+        color: #fff;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        [data-testid="stDialog"] [role="dialog"] {
+            animation: none;
+        }
+    }

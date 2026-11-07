@@ -1,3 +1,4 @@
+from base64 import b64encode
 from pathlib import Path
 
 import joblib
@@ -7,174 +8,170 @@ import streamlit as st
 from src.preparar_datos import VARIABLES
 
 
-PROYECTO = Path(__file__).resolve().parent
-RUTA_MODELO = PROYECTO / "modelos" / "modelo_diabetes.joblib"
-RESULTADOS = PROYECTO / "resultados"
+ROOT = Path(__file__).resolve().parent
+MODEL = ROOT / "modelos" / "modelo_diabetes.joblib"
+RESULTS = ROOT / "resultados"
+ASSETS = ROOT / "assets"
 
 st.set_page_config(
-    page_title="Predicción de diabetes | Proyecto de IA",
-    page_icon="📊",
+    page_title="Predicción de diabetes | UPAO",
+    page_icon="🧪",
     layout="wide",
 )
 
+ICONS = {
+    "flask": '<path d="M8 3h8M9 3v7L4 19a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2l-5-9V3M7 15h10"/><path d="M10 18h.01m4-1h.01"/>',
+    "user": '<circle cx="12" cy="7" r="4"/><path d="M5 21v-2a7 7 0 0 1 14 0v2"/>',
+    "drop": '<path d="M12 2C9 7 5 11 5 15a7 7 0 0 0 14 0c0-4-4-8-7-13Z"/><path d="M15 16a3 3 0 0 1-2 3"/>',
+    "heart": '<path d="M20 5a5 5 0 0 0-8 1 5 5 0 0 0-8-1c-5 5 2 11 8 16 6-5 13-11 8-16Z"/><path d="M3 12h5l2-4 3 8 2-4h6"/>',
+    "waves": '<path d="M2 6c3-4 5 4 8 0s5 4 8 0c2-2 3-1 4 0M2 12c3-4 5 4 8 0s5 4 8 0c2-2 3-1 4 0M2 18c3-4 5 4 8 0s5 4 8 0c2-2 3-1 4 0"/>',
+    "syringe": '<path d="m17 3 4 4m-2-2-3 3m-4-3 7 7M13 7l-8 8v4h4l8-8M5 19l-3 3m6-10 3 3m0-6 3 3"/>',
+    "scale": '<rect x="3" y="3" width="18" height="18" rx="3"/><path d="M7 10a6 6 0 0 1 10 0l-5 4Zm5 4 2-4"/>',
+    "users": '<circle cx="9" cy="7" r="3"/><path d="M3 21v-3a6 6 0 0 1 12 0v3m2-17a3 3 0 0 1 0 6m1 3a5 5 0 0 1 3 5v3"/>',
+    "calendar": '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4m10-4v4M3 10h18m-14 4h1m3 0h1m3 0h1m-9 3h1m3 0h1"/>',
+    "chip": '<rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v4m6-4v4M9 18v4m6-4v4M2 9h4m-4 6h4m12-6h4m-4 6h4"/>',
+}
+
+
+def icon(name):
+    return (
+        '<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" '
+        'stroke="currentColor" stroke-width="1.65" stroke-linecap="round" '
+        'stroke-linejoin="round">' + ICONS[name] + "</svg>"
+    )
+
+
+reference = ASSETS / "referencia_laboratorio.png"
+hero_art = ""
+if reference.is_file():
+    encoded = b64encode(reference.read_bytes()).decode("ascii")
+    hero_art = f' style="background-image:url(data:image/png;base64,{encoded})"'
+
+estilos = (ASSETS / "laboratorio.css").read_text(encoding="utf-8")
+st.markdown(f"<style>{estilos}</style>", unsafe_allow_html=True)
+
 st.markdown(
-    """
-    <style>
-    .stApp {
-        background:
-            radial-gradient(
-            ellipse at top right,
-            rgba(14, 116, 144, 0.12),
-            transparent 45%
-            ),
-        linear-gradient(160deg, #f8fafc 0%, #edf4f8 100%);
-    }
-
-    [data-testid="stHeader"] {
-        background: transparent;
-    }
-    .portada-ia {
-        background: linear-gradient(120deg, #0f172a, #164e63);
-        color: #ffffff;
-        border-radius: 20px;
-        padding: clamp(24px, 4vw, 48px);
-        margin-bottom: 24px;
-    }
-
-    .portada-ia h1 {
-        color: #ffffff;
-        font-size: clamp(2rem, 4vw, 3.25rem);
-        margin: 8px 0;
-        padding: 0;
-    }
-
-    .portada-ia p {
-        color: #e2e8f0;
-        margin: 8px 0 0;
-    }
-
-    .portada-ia .etiqueta {
-        color: #a5f3fc;
-        font-size: 0.85rem;
-        font-weight: 700;
-        letter-spacing: 0.06em;
-    }
-
-    .portada-ia .detalle {
-        color: #cbd5e1;
-        font-size: 0.9rem;
-        margin-top: 16px;
-    }
-    </style>
-
-    <div class="portada-ia">
-        <span class="etiqueta">UPAO · PROYECTO DE INTELIGENCIA ARTIFICIAL</span>
-        <h1>Predicción de diabetes</h1>
-        <p>Clasificación con aprendizaje automático a partir de ocho variables.</p>
-        <p class="detalle">
-            Modelo SVM · 231 registros de prueba · Prototipo académico
-        </p>
+    f"""
+    <div class="lab-hero">
+        <div class="lab-art" aria-hidden="true"{hero_art}></div>
+        <div class="lab-logo">{icon("flask")}</div>
+        <div class="lab-heading">
+            <h1>Predicción de diabetes</h1>
+            <p><strong>UPAO</strong> · Proyecto de IA</p>
+        </div>
     </div>
     """,
     unsafe_allow_html=True,
 )
 
-if not RUTA_MODELO.is_file():
+if not MODEL.is_file():
     st.error("Ejecuta primero: python src/evaluar_modelo_final.py")
     st.stop()
 
 
 @st.cache_resource
-def cargar_modelo(ruta, version):
-    """Cargar el modelo una vez por versión del archivo."""
-    return joblib.load(ruta)
+def load_model(path, version):
+    return joblib.load(path)
 
 
-modelo = cargar_modelo(str(RUTA_MODELO), RUTA_MODELO.stat().st_mtime_ns)
+model = load_model(str(MODEL), MODEL.stat().st_mtime_ns)
+metrics = pd.read_csv(RESULTS / "metricas_prueba.csv")
+row = metrics.iloc[0]
+
+
 @st.dialog("Resultado de la clasificación")
-def mostrar_resultado(clase):
-    etiqueta = "Positiva" if clase == 1 else "Negativa"
-
-    st.metric("Clase predicha", str(clase))
-    st.info(f"Clasificación del modelo SVM: {etiqueta}")
+def show_result(prediction):
+    st.metric("Clase predicha", str(prediction))
+    if prediction == 1:
+        st.warning("Clase positiva según el modelo SVM.")
+    else:
+        st.info("Clase negativa según el modelo SVM.")
     st.caption("Prototipo académico. Sin uso diagnóstico.")
-
     if st.button("Volver al formulario", type="primary"):
         st.rerun()
 
-prediccion, evaluacion = st.tabs(["Predicción", "Resultados de prueba"])
 
-with prediccion:
-    st.subheader("Clasifica un registro de ejemplo")
-    st.caption("Demostración académica. La clasificación no tiene uso diagnóstico.")
-    st.write("Los valores iniciales corresponden a un caso de ejemplo.")
+FIELDS = [
+    ("Pregnancies", "Embarazos", "user", 0, 2, "%d"),
+    ("Glucose", "Glucosa", "drop", 1, 120, "%d"),
+    ("BloodPressure", "Presión diastólica", "heart", 1, 70, "%d"),
+    ("SkinThickness", "Pliegue cutáneo", "waves", 1, 25, "%d"),
+    ("Insulin", "Insulina", "syringe", 1, 100, "%d"),
+    ("BMI", "IMC", "scale", 0.1, 28.5, "%.1f"),
+    ("DiabetesPedigreeFunction", "Antecedentes familiares", "users", 0.0, 0.351, "%.3f"),
+    ("Age", "Edad", "calendar", 21, 35, "%d"),
+]
 
+prediction_tab, evaluation_tab = st.tabs(["▥  Predicción", "▤  Resultados de prueba"])
+
+with prediction_tab:
     with st.form("datos_clinicos"):
-        izquierda, derecha = st.columns(2)
+        st.markdown(
+            f'<h2 class="lab-form-title">{icon("drop")} Ingresar datos del registro</h2>',
+            unsafe_allow_html=True,
+        )
+        st.caption("Clasifica el caso de ejemplo o modifica los valores.")
+        values = {}
+        for start in (0, 4):
+            for col, field in zip(st.columns(4), FIELDS[start:start + 4]):
+                key, label, symbol, minimum, default, fmt = field
+                with col:
+                    st.markdown(
+                        f'<div class="lab-field">{icon(symbol)}<span>{label}</span></div>',
+                        unsafe_allow_html=True,
+                    )
+                    values[key] = st.number_input(
+                        label, min_value=minimum, value=default, format=fmt,
+                        key=key, label_visibility="collapsed",
+                    )
 
-        with izquierda:
-            embarazos = st.number_input("Embarazos", min_value=0, value=2)
-            glucosa = st.number_input("Glucosa (mg/dL)", min_value=1, value=120)
-            presion = st.number_input("Presión diastólica (mmHg)", min_value=1, value=70)
-            pliegue = st.number_input("Pliegue cutáneo (mm)", min_value=1, value=25)
+        _, columna_central, _ = st.columns([1, 2, 1])
 
-        with derecha:
-            insulina = st.number_input("Insulina (µU/mL)", min_value=1, value=100)
-            imc = st.number_input("IMC (kg/m²)", min_value=0.1, value=28.5)
-            antecedentes = st.number_input( "Índice de antecedentes familiares", min_value=0.0,
-                value=0.351,
-                format="%.3f",
+        with columna_central:
+            classify = st.form_submit_button(
+                "▷  Clasificar registro",
+                type="primary",
+                use_container_width=True,
             )
-            edad = st.number_input("Edad (años)", min_value=21, value=35)
 
-        calcular = st.form_submit_button("Clasificar registro", type="primary")
+    if classify:
+        missing = [label for key, label, *_ in FIELDS if values[key] is None]
+        if missing:
+            st.error("Completa estos campos: " + ", ".join(missing) + ".")
+        else:
+            entry = pd.DataFrame([values], columns=VARIABLES)
+            show_result(int(model.predict(entry)[0]))
 
-        if calcular:
-            campos = [
-                ("Embarazos", embarazos),
-                ("Glucosa", glucosa),
-                ("Presión diastólica", presion),
-                ("Pliegue cutáneo", pliegue),
-                ("Insulina", insulina),
-                ("IMC", imc),
-                ("Índice de antecedentes familiares", antecedentes),
-                ("Edad", edad),
-            ]
+    st.markdown(
+        f"""
+        <div class="lab-summary">
+          <div><span class="lab-chip">{icon("chip")} SVM</span></div>
+          <div>Exactitud<strong>{row['accuracy']:.2%}</strong></div>
+          <div>Sensibilidad<strong>{row['recall']:.2%}</strong></div>
+          <div>AUC-ROC<strong>{row['auc_roc']:.3f}</strong></div>
+        </div>
+        <div class="lab-footer">Prototipo académico. Sin uso diagnóstico.</div>
+        """,
+        unsafe_allow_html=True,
+    )
 
-            faltantes = [
-                nombre for nombre, valor in campos if valor is None
-            ]
-
-            if faltantes:
-                st.error("Completa estos campos: " + ", ".join(faltantes) + ".")
-            else:
-                entrada = pd.DataFrame(
-                    [[valor for _, valor in campos]],
-                    columns=VARIABLES,
-                )
-            clase = int(modelo.predict(entrada)[0])
-            mostrar_resultado(clase)
-
-with evaluacion:
+with evaluation_tab:
     st.subheader("Desempeño del modelo en prueba")
     st.caption("Evaluación del SVM con 231 registros reservados.")
-
-    metricas = pd.read_csv(RESULTADOS / "metricas_prueba.csv")
-    fila = metricas.iloc[0]
-
-    exactitud, precision, recall, f1, auc = st.columns(5)
-
-    exactitud.metric("Exactitud", f"{fila['accuracy']:.2%}")
-    precision.metric("Precisión", f"{fila['precision']:.2%}")
-    recall.metric("Sensibilidad", f"{fila['recall']:.2%}")
-    f1.metric("F1", f"{fila['f1']:.3f}")
-    auc.metric("AUC-ROC", f"{fila['auc_roc']:.3f}")
+    for col, label, value in zip(
+        st.columns(5),
+        ["Exactitud", "Precisión", "Sensibilidad", "F1", "AUC-ROC"],
+        [
+            f"{row['accuracy']:.2%}", f"{row['precision']:.2%}",
+            f"{row['recall']:.2%}", f"{row['f1']:.3f}", f"{row['auc_roc']:.3f}",
+        ],
+    ):
+        col.metric(label, value)
 
     with st.expander("Ver tabla completa de métricas"):
-        st.dataframe(metricas.round(4), hide_index=True)
+        st.dataframe(metrics.round(4), hide_index=True)
 
     st.markdown("#### Matriz de confusión y curva ROC")
-
-    izquierda, derecha = st.columns(2)
-    izquierda.image(str(RESULTADOS / "matriz_confusion.png"))
-    derecha.image(str(RESULTADOS / "curva_roc.png"))
+    left, right = st.columns(2)
+    left.image(str(RESULTS / "matriz_confusion.png"))
+    right.image(str(RESULTS / "curva_roc.png"))
